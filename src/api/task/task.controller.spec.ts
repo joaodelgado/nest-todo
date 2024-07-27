@@ -39,7 +39,7 @@ describe('TaskController', () => {
       const result = await controller.create(req, request);
 
       // Verify
-      await expect(result).resolves.toStrictEqual(TaskResponse.from_domain(expected_task));
+      expect(result).toStrictEqual(TaskResponse.from_domain(expected_task));
     });
 
   });
