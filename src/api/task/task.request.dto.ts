@@ -8,14 +8,14 @@ export class NewTaskRequest {
   @IsOptional()
   deadline?: Date;
 
-  public static fromDomain(task: NewTask): NewTaskRequest {
+  public static from_domain(task: NewTask): NewTaskRequest {
     const request = new NewTaskRequest();
     request.description = task.data.description;
     request.deadline = task.data.deadline;
     return request;
   }
 
-  public toDomain(): NewTask {
+  public to_domain(): NewTask {
     return new NewTask({
       description: this.description,
       completed: false,

@@ -10,7 +10,7 @@ export class TaskController {
   @Put()
   @HttpCode(HttpStatus.CREATED)
   async createTask(@Body() request: NewTaskRequest): Promise<TaskResponse> {
-    const task = await this.taskService.create(request.toDomain());
+    const task = await this.taskService.create(request.to_domain());
     return TaskResponse.fromDomain(task);
   }
 }

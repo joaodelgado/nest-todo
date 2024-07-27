@@ -14,8 +14,8 @@ export class TaskDbRepository implements TaskRepository {
 
   async create(task: NewTask): Promise<Task> {
     const saved = await this.taskOrmRepository.save(
-      TaskDbEntity.fromDomain(task),
+      TaskDbEntity.from_domain(task),
     );
-    return saved.toDomain();
+    return saved.to_domain();
   }
 }

@@ -27,6 +27,11 @@ $ npm run start:prod
 # unit tests
 $ npm run test
 
+# tests for each main module
+$ npm run test:domain
+$ npm run test:api
+$ npm run test:db
+
 # test coverage
 $ npm run test:cov
 

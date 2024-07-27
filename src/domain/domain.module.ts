@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TaskDomainModule } from './task/task.module';
+import { UserDomainModule } from './user/user.module';
 
-const modules = [TaskDomainModule];
+const modules = [UserDomainModule, TaskDomainModule];
 
 @Module({
   imports: modules,

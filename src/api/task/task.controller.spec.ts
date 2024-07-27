@@ -31,7 +31,7 @@ describe('TaskController', () => {
       const expected_task = createRandomTask(new_task.data);
       taskService.create.mockReturnValue(Promise.resolve(expected_task));
 
-      const request = NewTaskRequest.fromDomain(new_task);
+      const request = NewTaskRequest.from_domain(new_task);
 
       // Execute
       const result = controller.createTask(request);

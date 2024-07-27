@@ -24,7 +24,7 @@ export class TaskDbEntity {
 
   private constructor() { }
 
-  public static fromDomain(task: NewTask): TaskDbEntity {
+  public static from_domain(task: NewTask): TaskDbEntity {
     const dbEntity = new TaskDbEntity();
     dbEntity.description = task.data.description;
     dbEntity.completed = task.data.completed;
@@ -33,7 +33,7 @@ export class TaskDbEntity {
     return dbEntity;
   }
 
-  public toDomain(): Task {
+  public to_domain(): Task {
     return new Task({
       id: this.id,
       description: this.description,
