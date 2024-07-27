@@ -61,6 +61,9 @@ $ npm run test:db
 $ npm run test:cov
 ```
 
+**Note:** The tests as they are are only a proof of concept, and it's missing coverage over most of the application.
+The app is also missing some end-to-end tests.
+
 ## Using the application
 
 The application only has a REST api to interact with it, protected through with basic auth.
