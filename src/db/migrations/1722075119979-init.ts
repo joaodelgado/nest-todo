@@ -20,7 +20,8 @@ export class Init1722075119979 implements MigrationInterface {
           description TEXT(1024) NOT NULL,
           completed INTEGER NOT NULL,
           deadline BIGINT,
-          created_at BIGINT NOT NULL
+          created_at BIGINT NOT NULL,
+          created_by INTEGER NOT NULL REFERENCES users (id)
       );
       `,
     );

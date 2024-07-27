@@ -1,8 +1,11 @@
+import { User } from "../user/user.entity";
+
 export interface NewTaskData {
   description: string;
   completed: boolean;
   deadline?: Date;
   created_at: Date;
+  created_by: User;
 }
 
 export class NewTask {

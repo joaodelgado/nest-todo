@@ -12,6 +12,14 @@ export class UserDbEntity {
   @Column()
   pass_hash: string;
 
+  public static from_id(id: number): UserDbEntity {
+    const dbEntity = new UserDbEntity();
+
+    dbEntity.id = id;
+
+    return dbEntity;
+  }
+
   public static from_domain(user: NewUser): UserDbEntity {
     const dbEntity = new UserDbEntity();
 

@@ -27,14 +27,16 @@ describe('TaskController', () => {
 
     it('should accept a valid task', async () => {
       // Prepare
-      const new_task = createRandomNewTask();
-      const expected_task = createRandomTask(new_task.data);
+      const new_task = await createRandomNewTask();
+      const expected_task = await createRandomTask(new_task.data);
       taskService.create.mockReturnValue(Promise.resolve(expected_task));
 
+      const req = createMock<Request>();
+      req['user'] = new_task.data.created_by;
       const request = NewTaskRequest.from_domain(new_task);
 
       // Execute
-      const result = controller.createTask(request);
+      const result = controller.createTask(req, request);
 
       // Verify
       await expect(result).resolves.toStrictEqual(TaskResponse.fromDomain(expected_task));

@@ -32,7 +32,7 @@ describe('TaskService', () => {
 
   it('create should not allow overdue tasks', async () => {
     // Prepare
-    const new_task = createRandomNewTask({
+    const new_task = await createRandomNewTask({
       deadline: new Date("2020-01-01")
     });
 
@@ -46,8 +46,8 @@ describe('TaskService', () => {
 
   it('create should pass valid tasks to the repository', async () => {
     // Prepare
-    const new_task = createRandomNewTask();
-    const expected_task = createRandomTask(new_task.data);
+    const new_task = await createRandomNewTask();
+    const expected_task = await createRandomTask(new_task.data);
     taskRepository.create.mockReturnValue(Promise.resolve(expected_task));
 
     // Execute

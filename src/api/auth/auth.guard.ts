@@ -10,6 +10,8 @@ import { UserService } from '../../domain/user/user.service';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './auth.decorator';
 
+export const REQUEST_USER_KEY = 'user';
+
 interface BasicAuth {
   username: string;
   password: string;
@@ -44,7 +46,7 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    request['user'] = user;
+    request[REQUEST_USER_KEY] = user;
 
     return true;
   }

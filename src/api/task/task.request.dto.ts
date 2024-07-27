@@ -1,5 +1,6 @@
 import { IsNotEmpty, IsOptional } from 'class-validator';
 import { NewTask } from '../../domain/task/task.entity';
+import { User } from 'src/domain/user/user.entity';
 
 export class NewTaskRequest {
   @IsNotEmpty()
@@ -15,12 +16,13 @@ export class NewTaskRequest {
     return request;
   }
 
-  public to_domain(): NewTask {
+  public to_domain(user: User): NewTask {
     return new NewTask({
       description: this.description,
       completed: false,
       deadline: this.deadline,
       created_at: new Date(),
+      created_by: user
     });
   }
 }
