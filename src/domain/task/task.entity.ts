@@ -31,6 +31,26 @@ export class Task extends NewTask {
   }
 }
 
+export interface UpdateTaskData {
+  id: number;
+  user: User;
+  description?: string;
+  completed?: boolean;
+  deadline?: Date;
+}
+
+export class UpdateTask {
+  public constructor(public data: UpdateTaskData) { }
+
+  is_overdue(): boolean | undefined {
+    if (!this.data.deadline) {
+      return undefined;
+    }
+
+    return this.data.deadline < new Date();
+  }
+}
+
 export interface TaskFilter {
   user: User;
   id?: number;

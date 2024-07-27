@@ -5,7 +5,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { NewTask, Task } from '../../domain/task/task.entity';
+import { NewTask, Task, UpdateTask } from '../../domain/task/task.entity';
 import { UserDbEntity } from '../user/user.dbentity';
 
 @Entity('tasks')
@@ -41,6 +41,18 @@ export class TaskDbEntity {
     return dbEntity;
   }
 
+  public patch(task: UpdateTask) {
+    if (task.data.description !== undefined) {
+      this.description = task.data.description;
+    }
+    if (task.data.completed !== undefined) {
+      this.completed = task.data.completed;
+    }
+    if (task.data.deadline !== undefined) {
+      this.deadline = task.data.deadline;
+    }
+  }
+
   public to_domain(): Task {
     return new Task({
       id: this.id,
@@ -48,7 +60,7 @@ export class TaskDbEntity {
       completed: this.completed,
       deadline: this.deadline,
       created_at: this.created_at,
-      created_by: this.created_by.to_domain(),
+      created_by: this.created_by?.to_domain(),
     });
   }
 }

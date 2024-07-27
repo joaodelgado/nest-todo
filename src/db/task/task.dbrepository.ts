@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { TaskDbEntity } from './task.dbentity';
 import { TaskRepository } from '../../domain/task/task.repository';
-import { NewTask, Task, TaskFilter } from '../../domain/task/task.entity';
+import { NewTask, Task, TaskFilter, UpdateTask } from '../../domain/task/task.entity';
 import { Equal, FindOptionsWhere, IsNull, LessThan, MoreThanOrEqual, Or, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedFilter, PaginatedResult } from 'src/domain/utils/pagination.util';
 import { paginate, to_paginated_result } from '../utils/pagination.utils';
+import { UserDbEntity } from '../user/user.dbentity';
 
 @Injectable()
 export class TaskDbRepository implements TaskRepository {
@@ -46,6 +47,29 @@ export class TaskDbRepository implements TaskRepository {
       TaskDbEntity.from_domain(task),
     );
     return saved.to_domain();
+  }
+
+  async update(task: UpdateTask): Promise<Task> {
+    // TODO should this logic be on the service layer?
+    const existing_task = await this.taskOrmRepository.findOneBy({
+      id: task.data.id,
+      created_by: UserDbEntity.from_id(task.data.user.data.id),
+    });
+
+    if (!existing_task) {
+      throw new NotFoundException();
+    }
+
+    await this.taskOrmRepository.manager.transaction(async () => {
+      const result = await this.taskOrmRepository.update(task.data.id, existing_task);
+      console.log(result);
+      if (result.affected !== 1) {
+        throw new ConflictException("Task deleted while updating");
+      }
+    });
+
+
+    return existing_task.to_domain();
   }
 
   private apply_filter(filter: TaskFilter): FindOptionsWhere<TaskDbEntity> {

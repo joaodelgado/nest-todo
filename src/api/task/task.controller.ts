@@ -1,9 +1,10 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Param, Put, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { TaskResponse } from './task.response.dto';
-import { ListTaskRequest, NewTaskRequest } from './task.request.dto';
+import { ListTaskRequest, NewTaskRequest, UpdateTaskRequest } from './task.request.dto';
 import { TaskService } from '../../domain/task/task.service';
 import { REQUEST_USER_KEY } from '../auth/auth.guard';
 import { PaginatedResponse } from '../utils/pagination.util';
+import { UpdateTask } from 'src/domain/task/task.entity';
 
 @Controller('/tasks')
 export class TaskController {
@@ -35,10 +36,19 @@ export class TaskController {
     return PaginatedResponse.from_domain(tasks, TaskResponse.from_domain);
   }
 
-  @Put()
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Req() req: Request, @Body() request: NewTaskRequest): Promise<TaskResponse> {
     const task = await this.taskService.create(request.to_domain(req[REQUEST_USER_KEY]));
+    return TaskResponse.from_domain(task);
+  }
+
+  @Patch(':id')
+  async update(
+    @Req() req: Request,
+    @Param('id') id: number,
+    @Body() request: UpdateTaskRequest): Promise<TaskResponse> {
+    const task = await this.taskService.update(request.to_domain(id, req[REQUEST_USER_KEY]));
     return TaskResponse.from_domain(task);
   }
 }
