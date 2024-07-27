@@ -1,7 +1,8 @@
 import { NewUser, User } from './user.entity';
 
 export interface UserRepository {
-  get(username: string): Promise<User | null>;
+  exists(username: string): Promise<boolean>;
+  get(username: string): Promise<User | undefined>;
   create(user: NewUser): Promise<User>;
 }
 

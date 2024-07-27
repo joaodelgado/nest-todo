@@ -12,6 +12,10 @@ export class UserDbRepository implements UserRepository {
     private userOrmRepostory: Repository<UserDbEntity>,
   ) { }
 
+  async exists(username: string): Promise<boolean> {
+    return await this.get(username) !== undefined;
+  }
+
   async get(username: string): Promise<User | null> {
     const user = await this.userOrmRepostory.findOneBy({ username: username });
     return user?.to_domain();

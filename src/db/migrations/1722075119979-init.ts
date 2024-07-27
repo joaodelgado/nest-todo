@@ -10,6 +10,7 @@ export class Init1722075119979 implements MigrationInterface {
           username TEXT(1024) NOT NULL UNIQUE,
           pass_hash TEXT NOT NULL
       );
+      CREATE INDEX username_uniq_idx ON users (username);
       `,
     );
     await queryRunner.query(
