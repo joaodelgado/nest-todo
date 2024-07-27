@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedFilter, PaginatedResult } from 'src/domain/utils/pagination.util';
 import { paginate, to_paginated_result } from '../utils/pagination.utils';
 import { UserDbEntity } from '../user/user.dbentity';
+import { Equals } from 'class-validator';
 
 @Injectable()
 export class TaskDbRepository implements TaskRepository {
@@ -88,6 +89,10 @@ export class TaskDbRepository implements TaskRepository {
         MoreThanOrEqual(new Date()),
         IsNull(),
       )
+    }
+
+    if (filter.completed !== undefined) {
+      where['completed'] = Equal(filter.completed);
     }
 
     return where;

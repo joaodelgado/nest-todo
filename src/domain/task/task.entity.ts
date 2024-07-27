@@ -55,4 +55,5 @@ export interface TaskFilter {
   user: User;
   id?: number;
   overdue?: boolean;
+  completed?: boolean;
 }

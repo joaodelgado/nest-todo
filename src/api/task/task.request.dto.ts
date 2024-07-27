@@ -74,6 +74,14 @@ export class ListTaskRequest extends PaginatedRequest {
   })
   overdue?: boolean;
 
+  @IsOptional()
+  @IsBoolean()
+  @Transform((param) => {
+    let value = param.obj[param.key];
+    return value === 'true' || value === true || value === 1 || value === '1';
+  })
+  completed?: boolean;
+
   public to_domain(user: User): PaginatedFilter<TaskFilter> {
     return {
       page: this.page,
@@ -81,6 +89,7 @@ export class ListTaskRequest extends PaginatedRequest {
       filter: {
         user: user,
         overdue: this.overdue,
+        completed: this.completed,
       }
     };
   }
