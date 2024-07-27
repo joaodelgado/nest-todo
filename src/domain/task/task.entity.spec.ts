@@ -14,7 +14,7 @@ export function createRandomNewTask(data?: Partial<NewTaskData>): NewTask {
   return new NewTask(task_data);
 }
 
-export function createNewTask(data?: Partial<TaskData>): Task {
+export function createRandomTask(data?: Partial<TaskData>): Task {
   const task_data = {
     id: faker.number.int(),
     description: faker.lorem.words(),

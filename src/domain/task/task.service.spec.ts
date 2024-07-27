@@ -3,7 +3,7 @@ import { TaskService } from './task.service';
 import { TaskRepository } from './task.repository';
 import { createMock, DeepMocked } from '@golevelup/ts-jest';
 import { UnprocessableEntityException } from '@nestjs/common';
-import { createRandomNewTask } from './task.entity.spec';
+import { createRandomNewTask, createRandomTask } from './task.entity.spec';
 
 describe('TaskService', () => {
   let taskRepository: DeepMocked<TaskRepository>;
@@ -42,6 +42,20 @@ describe('TaskService', () => {
     // Verify
     expect(taskRepository.create).toHaveBeenCalledTimes(0);
     await expect(result).rejects.toBeInstanceOf(UnprocessableEntityException);
+  });
+
+  it('create should pass valid tasks to the repository', async () => {
+    // Prepare
+    const new_task = createRandomNewTask();
+    const expected_task = createRandomTask(new_task.data);
+    taskRepository.create.mockReturnValue(Promise.resolve(expected_task));
+
+    // Execute
+    const result = service.create(new_task);
+
+    // Verify
+    expect(taskRepository.create).toHaveBeenCalledWith(new_task);
+    await expect(result).resolves.toStrictEqual(expected_task);
   });
 });
 
