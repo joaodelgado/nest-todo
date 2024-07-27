@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { TaskDbEntity } from './task.dbentity';
 import { TaskRepository } from '../../domain/task/task.repository';
 import { NewTask, Task, TaskFilter, UpdateTask } from '../../domain/task/task.entity';
@@ -6,8 +6,6 @@ import { Equal, FindOptionsWhere, IsNull, LessThan, MoreThanOrEqual, Or, Reposit
 import { InjectRepository } from '@nestjs/typeorm';
 import { PaginatedFilter, PaginatedResult } from 'src/domain/utils/pagination.util';
 import { paginate, to_paginated_result } from '../utils/pagination.utils';
-import { UserDbEntity } from '../user/user.dbentity';
-import { Equals } from 'class-validator';
 
 @Injectable()
 export class TaskDbRepository implements TaskRepository {
@@ -17,13 +15,18 @@ export class TaskDbRepository implements TaskRepository {
   ) { }
 
   async get_one(filter: TaskFilter): Promise<Task | undefined> {
+    const result = await this.get_one_db(filter);
+    return result?.to_domain();
+  }
+
+  private async get_one_db(filter: TaskFilter): Promise<TaskDbEntity | undefined> {
     const result = await this.taskOrmRepository.findOne({
       where: this.apply_filter(filter),
       relations: {
         created_by: true,
       }
     });
-    return result?.to_domain();
+    return result;
   }
 
   async list(paged_filter: PaginatedFilter<TaskFilter>): Promise<PaginatedResult<Task>> {
@@ -51,15 +54,7 @@ export class TaskDbRepository implements TaskRepository {
   }
 
   async update(task: UpdateTask): Promise<Task> {
-    // TODO should this logic be on the service layer?
-    const existing_task = await this.taskOrmRepository.findOneBy({
-      id: task.data.id,
-      created_by: UserDbEntity.from_id(task.data.user.data.id),
-    });
-
-    if (!existing_task) {
-      throw new NotFoundException();
-    }
+    const existing_task = await this.get_one_db(task.data);
 
     await this.taskOrmRepository.manager.transaction(async () => {
       const result = await this.taskOrmRepository.update(task.data.id, existing_task);
@@ -97,4 +92,5 @@ export class TaskDbRepository implements TaskRepository {
 
     return where;
   }
+
 }
