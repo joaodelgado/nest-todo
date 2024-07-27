@@ -4,11 +4,14 @@ import { User } from 'src/domain/user/user.entity';
 import { PaginatedRequest } from '../utils/pagination.util';
 import { Transform } from 'class-transformer';
 import { PaginatedFilter } from 'src/domain/utils/pagination.util';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class NewTaskRequest {
+  @ApiProperty()
   @IsNotEmpty()
   description: string;
 
+  @ApiProperty()
   @IsOptional()
   deadline?: Date;
 
@@ -31,9 +34,11 @@ export class NewTaskRequest {
 }
 
 export class UpdateTaskRequest {
+  @ApiProperty()
   @IsOptional()
   description: string;
 
+  @ApiProperty()
   @IsOptional()
   @IsBoolean()
   @Transform((param) => {
@@ -42,6 +47,7 @@ export class UpdateTaskRequest {
   })
   completed?: boolean;
 
+  @ApiProperty()
   @IsOptional()
   deadline?: Date;
 
@@ -66,6 +72,7 @@ export class UpdateTaskRequest {
 
 
 export class ListTaskRequest extends PaginatedRequest {
+  @ApiProperty()
   @IsOptional()
   @IsBoolean()
   @Transform((param) => {
@@ -74,6 +81,7 @@ export class ListTaskRequest extends PaginatedRequest {
   })
   overdue?: boolean;
 
+  @ApiProperty()
   @IsOptional()
   @IsBoolean()
   @Transform((param) => {

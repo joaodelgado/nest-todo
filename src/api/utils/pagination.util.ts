@@ -1,12 +1,15 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsPositive, Max } from 'class-validator';
 import { PaginatedResult } from 'src/domain/utils/pagination.util';
 
 export class PaginatedRequest {
+  @ApiProperty()
   @IsOptional()
   @IsPositive()
   @Max(50)
   public page: number = 1;
 
+  @ApiProperty()
   @IsOptional()
   @IsPositive()
   @Max(50)
