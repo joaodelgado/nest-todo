@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { TaskDbEntity } from './task.dbentity';
 import { TaskRepository } from '../../domain/task/task.repository';
 import { NewTask, Task, TaskFilter, UpdateTask } from '../../domain/task/task.entity';
@@ -14,9 +14,10 @@ export class TaskDbRepository implements TaskRepository {
     private taskOrmRepository: Repository<TaskDbEntity>,
   ) { }
 
-  async get_one(filter: TaskFilter): Promise<Task | undefined> {
+  async get_one(filter: TaskFilter): Promise<Task> {
     const result = await this.get_one_db(filter);
-    return result?.to_domain();
+
+    return result.to_domain();
   }
 
   private async get_one_db(filter: TaskFilter): Promise<TaskDbEntity | undefined> {
@@ -26,6 +27,11 @@ export class TaskDbRepository implements TaskRepository {
         created_by: true,
       }
     });
+
+    if (result == undefined) {
+      throw new NotFoundException();
+    }
+
     return result;
   }
 
@@ -60,12 +66,17 @@ export class TaskDbRepository implements TaskRepository {
       const result = await this.taskOrmRepository.update(task.data.id, existing_task);
       console.log(result);
       if (result.affected !== 1) {
-        throw new ConflictException("Task deleted while updating");
+        throw new ConflictException("Task might have been deleted while updating");
       }
     });
 
 
     return existing_task.to_domain();
+  }
+
+  async delete(task: TaskFilter): Promise<void> {
+    const existing_task = await this.get_one_db(task);
+    await this.taskOrmRepository.delete(existing_task.id);
   }
 
   private apply_filter(filter: TaskFilter): FindOptionsWhere<TaskDbEntity> {

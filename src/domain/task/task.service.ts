@@ -14,7 +14,7 @@ export class TaskService {
     @Inject(TaskRepository) private readonly taskRepository: TaskRepository,
   ) { }
 
-  async get_one(filter: TaskFilter): Promise<Task | undefined> {
+  async get_one(filter: TaskFilter): Promise<Task> {
     return this.taskRepository.get_one(filter);
   }
 
@@ -34,6 +34,10 @@ export class TaskService {
       throw new UnprocessableEntityException("Deadlines can't be in the past");
     }
     return this.taskRepository.update(task);
+  }
+
+  async delete(filter: TaskFilter): Promise<void> {
+    return this.taskRepository.delete(filter);
   }
 }
 

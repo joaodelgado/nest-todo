@@ -1,10 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Param, Patch, Post, Query, Req } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, NotFoundException, Param, Patch, Post, Query, Req } from '@nestjs/common';
 import { TaskResponse } from './task.response.dto';
 import { ListTaskRequest, NewTaskRequest, UpdateTaskRequest } from './task.request.dto';
 import { TaskService } from '../../domain/task/task.service';
 import { REQUEST_USER_KEY } from '../auth/auth.guard';
 import { PaginatedResponse } from '../utils/pagination.util';
-import { UpdateTask } from 'src/domain/task/task.entity';
 
 @Controller('/tasks')
 export class TaskController {
@@ -50,6 +49,17 @@ export class TaskController {
     @Body() request: UpdateTaskRequest): Promise<TaskResponse> {
     const task = await this.taskService.update(request.to_domain(id, req[REQUEST_USER_KEY]));
     return TaskResponse.from_domain(task);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async delete(
+    @Req() req: Request,
+    @Param('id') id: number): Promise<void> {
+    await this.taskService.delete({
+      user: req['user'],
+      id: id
+    });
   }
 }
 
