@@ -8,7 +8,7 @@ export class RegisterRequest {
   @IsNotEmpty()
   password: string;
 
-  public async toDomain(): Promise<NewUser> {
+  public async to_domain(): Promise<NewUser> {
     return NewUser.from_clear_credentitals(this.username, this.password);
   }
 }

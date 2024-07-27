@@ -4,8 +4,9 @@ import {
   Logger,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { NewTask, Task } from './task.entity';
+import { NewTask, Task, TaskFilter } from './task.entity';
 import { TaskRepository } from './task.repository';
+import { PaginatedResult } from '../utils/pagination.util';
 
 @Injectable()
 export class TaskService {
@@ -14,6 +15,10 @@ export class TaskService {
   constructor(
     @Inject(TaskRepository) private readonly taskRepository: TaskRepository,
   ) { }
+
+  async list(filter: TaskFilter): Promise<PaginatedResult<Task>> {
+    return this.taskRepository.list(filter);
+  }
 
   async create(task: NewTask): Promise<Task> {
     if (task.is_overdue()) {

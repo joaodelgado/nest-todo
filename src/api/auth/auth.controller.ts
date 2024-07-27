@@ -11,7 +11,7 @@ export class AuthController {
   @Post('/register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() request: RegisterRequest) {
-    await this.userService.create(await request.toDomain());
+    await this.userService.create(await request.to_domain());
   }
 }
 

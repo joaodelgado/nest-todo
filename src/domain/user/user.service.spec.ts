@@ -35,14 +35,15 @@ describe('UserService', () => {
       // Prepare
       const new_user = await createRandomNewUser();
       const expected_user = await createRandomUser(new_user.data);
+      userRepository.exists.mockReturnValue(Promise.resolve(false));
       userRepository.create.mockReturnValue(Promise.resolve(expected_user));
 
       // Execute
-      const result = service.create(new_user);
+      const result = await service.create(new_user);
 
       // Verify
       expect(userRepository.create).toHaveBeenCalledWith(new_user);
-      await expect(result).resolves.toStrictEqual(expected_user);
+      expect(result).toStrictEqual(expected_user);
     });
   });
 

@@ -1,6 +1,8 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
-import { NewTask } from '../../domain/task/task.entity';
+import { IsBoolean, IsNotEmpty, IsOptional } from 'class-validator';
+import { NewTask, TaskFilter } from '../../domain/task/task.entity';
 import { User } from 'src/domain/user/user.entity';
+import { PaginatedRequest } from '../utils/pagination.util';
+import { Transform } from 'class-transformer';
 
 export class NewTaskRequest {
   @IsNotEmpty()
@@ -24,5 +26,25 @@ export class NewTaskRequest {
       created_at: new Date(),
       created_by: user
     });
+  }
+}
+
+
+export class ListTaskRequest extends PaginatedRequest {
+  @IsOptional()
+  @IsBoolean()
+  @Transform((param) => {
+    let value = param.obj[param.key];
+    return value === 'true' || value === true || value === 1 || value === '1';
+  })
+  overdue?: boolean;
+
+  public to_domain(user: User): TaskFilter {
+    return {
+      page: this.page,
+      size: this.size,
+      user: user,
+      overdue: this.overdue,
+    };
   }
 }

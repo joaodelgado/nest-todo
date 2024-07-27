@@ -8,7 +8,7 @@ export class TaskResponse {
   deadline?: Date;
   overdue?: boolean;
 
-  public static fromDomain(task: Task): TaskResponse {
+  public static from_domain(task: Task): TaskResponse {
     return {
       id: task.data.id,
       description: task.data.description,

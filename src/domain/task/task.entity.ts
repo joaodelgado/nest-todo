@@ -1,4 +1,5 @@
 import { User } from "../user/user.entity";
+import { PaginatedFilter } from "../utils/pagination.util";
 
 export interface NewTaskData {
   description: string;
@@ -31,3 +32,7 @@ export class Task extends NewTask {
   }
 }
 
+export interface TaskFilter extends PaginatedFilter {
+  user: User;
+  overdue?: boolean;
+}

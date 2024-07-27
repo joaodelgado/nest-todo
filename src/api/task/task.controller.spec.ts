@@ -36,10 +36,10 @@ describe('TaskController', () => {
       const request = NewTaskRequest.from_domain(new_task);
 
       // Execute
-      const result = controller.createTask(req, request);
+      const result = await controller.create(req, request);
 
       // Verify
-      await expect(result).resolves.toStrictEqual(TaskResponse.fromDomain(expected_task));
+      await expect(result).resolves.toStrictEqual(TaskResponse.from_domain(expected_task));
     });
 
   });
