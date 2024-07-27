@@ -3,6 +3,7 @@ import { NewTask, TaskFilter } from '../../domain/task/task.entity';
 import { User } from 'src/domain/user/user.entity';
 import { PaginatedRequest } from '../utils/pagination.util';
 import { Transform } from 'class-transformer';
+import { PaginatedFilter } from 'src/domain/utils/pagination.util';
 
 export class NewTaskRequest {
   @IsNotEmpty()
@@ -39,12 +40,14 @@ export class ListTaskRequest extends PaginatedRequest {
   })
   overdue?: boolean;
 
-  public to_domain(user: User): TaskFilter {
+  public to_domain(user: User): PaginatedFilter<TaskFilter> {
     return {
       page: this.page,
       size: this.size,
-      user: user,
-      overdue: this.overdue,
+      filter: {
+        user: user,
+        overdue: this.overdue,
+      }
     };
   }
 }

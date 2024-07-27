@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { NewTask, Task, TaskFilter } from './task.entity';
 import { TaskRepository } from './task.repository';
-import { PaginatedResult } from '../utils/pagination.util';
+import { PaginatedFilter, PaginatedResult } from '../utils/pagination.util';
 
 @Injectable()
 export class TaskService {
@@ -16,7 +16,11 @@ export class TaskService {
     @Inject(TaskRepository) private readonly taskRepository: TaskRepository,
   ) { }
 
-  async list(filter: TaskFilter): Promise<PaginatedResult<Task>> {
+  async get_one(filter: TaskFilter): Promise<Task | undefined> {
+    return this.taskRepository.get_one(filter);
+  }
+
+  async list(filter: PaginatedFilter<TaskFilter>): Promise<PaginatedResult<Task>> {
     return this.taskRepository.list(filter);
   }
 

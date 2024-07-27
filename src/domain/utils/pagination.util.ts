@@ -1,4 +1,5 @@
-export interface PaginatedFilter {
+export interface PaginatedFilter<T> {
+  filter: T;
   page: number;
   size: number;
 }

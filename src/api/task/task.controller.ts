@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Put, Query, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, NotFoundException, Param, Put, Query, Req } from '@nestjs/common';
 import { TaskResponse } from './task.response.dto';
 import { ListTaskRequest, NewTaskRequest } from './task.request.dto';
 import { TaskService } from '../../domain/task/task.service';
@@ -8,6 +8,23 @@ import { PaginatedResponse } from '../utils/pagination.util';
 @Controller('/tasks')
 export class TaskController {
   constructor(private taskService: TaskService) { }
+
+  @Get(':id')
+  async get_by_id(
+    @Req() req: Request,
+    @Param('id') id: number,
+  ): Promise<TaskResponse> {
+    const task = await this.taskService.get_one({
+      user: req['user'],
+      id: id
+    });
+
+    if (task == undefined) {
+      throw new NotFoundException();
+    }
+
+    return TaskResponse.from_domain(task);
+  }
 
   @Get()
   async list(
